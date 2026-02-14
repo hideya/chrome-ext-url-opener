@@ -114,6 +114,9 @@ function parseUrls(text) {
 }
 
 function openUrlGroups(urlGroups) {
+  // Calculate total URLs across all groups
+  const totalUrls = urlGroups.reduce((sum, group) => sum + group.length, 0);
+  
   // Open each group in a separate window
   urlGroups.forEach((urls, groupIndex) => {
     // Delay between opening windows to avoid overwhelming the browser
@@ -138,10 +141,12 @@ function openUrlGroups(urlGroups) {
     }, groupIndex * 500); // 500ms delay between windows
   });
   
-  // Close the popup after starting to open all windows
+  // Close the popup after all URLs have had time to open
+  // Give extra time based on total number of URLs
+  const closeDelay = urlGroups.length * 500 + totalUrls * 100 + 2000;
   setTimeout(() => {
     window.close();
-  }, urlGroups.length * 500 + 500);
+  }, closeDelay);
 }
 
 // Save button - saves all URLs from current window
