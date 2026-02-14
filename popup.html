@@ -12,11 +12,13 @@
       <h1>📂 Drop URL File Here</h1>
       <p>Drop a text file containing a list of URLs</p>
       <p class="hint">One URL per line</p>
+      <button id="browseButton" class="browse-button">or click to select file</button>
     </div>
   </div>
   <div class="button-container">
     <button id="saveButton">Save</button>
   </div>
+  <input type="file" id="fileInput" accept=".txt" style="display: none;">
   <script src="popup.js"></script>
 </body>
 </html>

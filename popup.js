@@ -1,4 +1,6 @@
 const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const browseButton = document.getElementById('browseButton');
 
 // Prevent default drag behaviors
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -39,6 +41,20 @@ function handleDrop(e) {
     handleFile(files[0]);
   }
 }
+
+// Browse button - open file selector
+browseButton.addEventListener('click', (e) => {
+  e.stopPropagation(); // Prevent triggering drop zone
+  fileInput.click();
+});
+
+// Handle file selection from file input
+fileInput.addEventListener('change', (e) => {
+  const files = e.target.files;
+  if (files.length > 0) {
+    handleFile(files[0]);
+  }
+});
 
 function handleFile(file) {
   const reader = new FileReader();
