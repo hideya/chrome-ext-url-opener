@@ -61,10 +61,10 @@ function handleFile(file) {
   
   reader.onload = function(e) {
     const text = e.target.result;
-    const urls = parseUrls(text);
+    const urlGroups = parseUrls(text);
     
-    if (urls.length > 0) {
-      openUrls(urls);
+    if (urlGroups.length > 0) {
+      openUrlGroups(urlGroups);
     } else {
       alert('No valid URLs found in the file');
     }
@@ -74,45 +74,74 @@ function handleFile(file) {
 }
 
 function parseUrls(text) {
-  // Split by newlines and filter out empty lines
-  const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
+  // Split by newlines
+  const lines = text.split(/\r?\n/);
   
-  // Filter valid URLs (basic validation)
-  const urls = lines.filter(line => {
-    try {
-      new URL(line);
-      return true;
-    } catch {
-      return false;
+  // Group URLs by empty lines
+  const groups = [];
+  let currentGroup = [];
+  
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    
+    // Skip empty lines and comments (# or //)
+    if (trimmed.length === 0) {
+      // Empty line - start a new group if current group has URLs
+      if (currentGroup.length > 0) {
+        groups.push(currentGroup);
+        currentGroup = [];
+      }
+    } else if (trimmed.startsWith('#') || trimmed.startsWith('//')) {
+      // Comment line - skip it
+      return;
+    } else {
+      // Try to parse as URL
+      try {
+        new URL(trimmed);
+        currentGroup.push(trimmed);
+      } catch {
+        // Invalid URL, skip it
+      }
     }
   });
   
-  return urls;
+  // Add the last group if it has URLs
+  if (currentGroup.length > 0) {
+    groups.push(currentGroup);
+  }
+  
+  return groups;
 }
 
-function openUrls(urls) {
-  // Create a new window with the first URL
-  chrome.windows.create({
-    url: urls[0],
-    type: 'normal',
-    focused: true
-  }, (newWindow) => {
-    // Open remaining URLs as tabs in the new window
-    urls.slice(1).forEach((url, index) => {
-      setTimeout(() => {
-        chrome.tabs.create({ 
-          windowId: newWindow.id,
-          url: url, 
-          active: false 
-        });
-      }, (index + 1) * 100);
-    });
-    
-    // Close the popup after opening all URLs
+function openUrlGroups(urlGroups) {
+  // Open each group in a separate window
+  urlGroups.forEach((urls, groupIndex) => {
+    // Delay between opening windows to avoid overwhelming the browser
     setTimeout(() => {
-      window.close();
-    }, urls.length * 100 + 500);
+      // Create a new window with the first URL of this group
+      chrome.windows.create({
+        url: urls[0],
+        type: 'normal',
+        focused: groupIndex === 0 // Focus only the first window
+      }, (newWindow) => {
+        // Open remaining URLs as tabs in the new window
+        urls.slice(1).forEach((url, urlIndex) => {
+          setTimeout(() => {
+            chrome.tabs.create({ 
+              windowId: newWindow.id,
+              url: url, 
+              active: false 
+            });
+          }, (urlIndex + 1) * 100);
+        });
+      });
+    }, groupIndex * 500); // 500ms delay between windows
   });
+  
+  // Close the popup after starting to open all windows
+  setTimeout(() => {
+    window.close();
+  }, urlGroups.length * 500 + 500);
 }
 
 // Save button - saves all URLs from current window
