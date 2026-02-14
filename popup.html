@@ -7,9 +7,14 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="popup-container">
-    <h1>URL Opener</h1>
-    <button id="openButton">Open</button>
+  <div id="dropZone" class="drop-zone">
+    <div class="drop-zone-content">
+      <h1>📂 Drop URL File Here</h1>
+      <p>Drop a text file containing a list of URLs</p>
+      <p class="hint">One URL per line</p>
+    </div>
+  </div>
+  <div class="button-container">
     <button id="saveButton">Save</button>
   </div>
   <script src="popup.js"></script>
