@@ -1,9 +1,11 @@
 // Listen for clicks on the extension icon
 chrome.action.onClicked.addListener((tab) => {
-  // Open a new window
+  // Open a new window with our drop zone page
   chrome.windows.create({
-    url: 'https://www.google.com',
+    url: 'dropzone.html',
     type: 'normal',
-    focused: true
+    focused: true,
+    width: 800,
+    height: 600
   });
 });

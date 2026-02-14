@@ -11,5 +11,11 @@
   },
   "permissions": [
     "tabs"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["dropzone.html", "dropzone.css", "dropzone.js"],
+      "matches": ["<all_urls>"]
+    }
   ]
 }

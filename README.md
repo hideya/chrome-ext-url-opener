@@ -10,3 +10,8 @@ A simple Chrome extension that opens a new browser window when you click the ext
 4. Select the `chrome-ext-url-opener` directory
 5. The extension icon will appear in your Chrome toolbar
 6. Click the icon to open a new window!
+
+## How to Update
+
+1. Reload the extension in chrome://extensions/
+2. Click the refresh icon 🔄
