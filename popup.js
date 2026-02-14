@@ -117,14 +117,6 @@ function openUrls(urls) {
 
 // Save button - saves all URLs from current window
 document.getElementById('saveButton').addEventListener('click', async () => {
-  // Ask user for filename
-  const filename = prompt('Enter filename:', 'urls.txt');
-  
-  // If user cancelled, do nothing
-  if (!filename) {
-    return;
-  }
-  
   // Get current window
   const currentWindow = await chrome.windows.getCurrent();
   
@@ -138,10 +130,10 @@ document.getElementById('saveButton').addEventListener('click', async () => {
   const blob = new Blob([urls], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   
-  // Download the file
+  // Download the file with Chrome's save dialog
   chrome.downloads.download({
     url: url,
-    filename: filename,
+    filename: 'urls.txt',
     saveAs: true
   });
   
