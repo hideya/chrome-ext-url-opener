@@ -4,7 +4,8 @@
   "version": "1.0",
   "description": "Opens a new browser window when the extension icon is clicked",
   "action": {
-    "default_title": "Open New Window"
+    "default_title": "Open New Window",
+    "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js"
